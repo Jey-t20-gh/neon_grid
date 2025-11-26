@@ -1,0 +1,7 @@
+{
+  "name": "NeonGrid",
+  "description": "A cinematic, futuristic splash screen for the NeonGrid civic issue tracking web application. Features a dark sci-fi theme with neon grid animations and voice synthesis, leading into the main dashboard.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
