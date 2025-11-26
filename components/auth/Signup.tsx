@@ -2,11 +2,9 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// FIX: Removed v9 modular imports for auth and firestore.
+import { createUserWithEmailAndPassword, UserCredential } from 'firebase/auth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig';
-// FIX: Use firebase/compat/app to get access to v8's `serverTimestamp`. This resolves the error on line 74.
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/firestore';
 
 
 // Icons
@@ -60,19 +58,17 @@ const Signup: React.FC<SignupProps> = ({ onSwitchToLogin }) => {
     }
 
     try {
-        // FIX: Switched to Firebase v8 syntax for creating a user.
-        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const userCredential: UserCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Create a document in Firestore 'users' collection
-        // FIX: Switched to Firebase v8 syntax for setting a document and getting a server timestamp.
         if (user) {
-            await db.collection("users").doc(user.uid).set({
+            await setDoc(doc(db, 'users', user.uid), {
                 username: username,
                 email: email,
                 role: 'citizen',
                 location: '', // Can be updated later
-                created_at: firebase.firestore.FieldValue.serverTimestamp()
+                created_at: serverTimestamp(),
+                updated_at: serverTimestamp()
             });
         }
 

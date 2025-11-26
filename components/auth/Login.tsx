@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// FIX: Removed v9 `signInWithEmailAndPassword` import, as we'll use the v8 syntax from the `auth` object.
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 
 // Icons
@@ -43,10 +43,10 @@ const Login: React.FC<LoginProps> = ({ onSwitchToSignup }) => {
     const password = formData.get('password') as string;
     
     try {
-        // FIX: Switched to Firebase v8 syntax for signing in.
-        await auth.signInWithEmailAndPassword(email, password);
+        await signInWithEmailAndPassword(auth, email, password);
         navigate('/splash');
     } catch (err: any) {
+        console.error("Login Error:", err);
         if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
             setError('Invalid email or password.');
         } else {
